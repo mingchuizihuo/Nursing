@@ -411,6 +411,7 @@
         })
         $(".closeMain").click(function () {
             $("#shujuback").show();
+
         })
     })
 
