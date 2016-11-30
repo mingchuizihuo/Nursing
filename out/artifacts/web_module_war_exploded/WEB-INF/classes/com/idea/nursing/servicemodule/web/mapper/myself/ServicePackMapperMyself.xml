@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.idea.nursing.servicemodule.web.dao.myself.ServicePackMapperMyself" >
+    <resultMap id="BaseResultMap" type="com.idea.nursing.servicemodule.web.domain.vo.ServicePackVO" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="serve_brief" property="serveBrief" jdbcType="VARCHAR" />
+        <result column="serve_name" property="serveName" jdbcType="VARCHAR" />
+        <result column="serve_care" property="serveCare" jdbcType="VARCHAR" />
+        <result column="serve_startdate" property="serveStartDate" jdbcType="TIMESTAMP" />
+        <result column="serve_rebate" property="servrRebate" jdbcType="TINYINT" />
+        <result column="serve_enddate" property="serveEnddate" jdbcType="TIMESTAMP" />
+        <result column="serve_serves" property="serveServes" jdbcType="VARCHAR" />
+        <association property="serveDetailed" javaType="com.idea.nursing.common.web.domain.pojo.CommentRichText">
+            <id column="id" property="id" jdbcType="BIGINT" />
+            <result column="rich_text_title" property="richTextTitle" jdbcType="VARCHAR" />
+            <result column="rich_text_head_picture" property="richTextHeadPicture" jdbcType="VARCHAR" />
+            <result column="rich_text_body" property="richTextBody" jdbcType="LONGVARCHAR" />
+        </association>
+
+
+        <association property="serveNurseify" javaType="com.idea.nursing.servicemodule.web.domain.pojo.Nurseify">
+
+            <id column="id" property="id" jdbcType="BIGINT" />
+            <result column="nursify_name" property="nursifyName" jdbcType="VARCHAR" />
+            <result column="nursify_level" property="nursifyLevel" jdbcType="TINYINT" />
+            <result column="nursify_tid" property="nursifyTid" jdbcType="BIGINT" />
+        </association>
+        <association property="commentPicture" javaType="com.idea.nursing.common.web.domain.pojo.CommentPicture">
+            <id column="id" property="id" jdbcType="BIGINT"/>
+            <result column="picture_address" property="pictureAddress" jdbcType="VARCHAR"/>
+            <result column="picture_type" property="pictureType" jdbcType="TINYINT"/>
+        </association>
+
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+       fsp.id,  fsp.serve_brief,  fsp.serve_name,  fsp.serve_care,   fsp.serve_rebate,  fsp.serve_enddate,
+         fsp.serve_serves, fsp.serve_startdate,
+
+         fn.id, fn.nursify_name, fn.nursify_level, fn.nursify_tid,
+
+         crt.id, crt.rich_text_title, crt.rich_text_head_picture,
+          p.id, p.picture_address, p.picture_type
+    </sql>
+    <select id="selectAllVO" resultMap="BaseResultMap" >
+        select
+
+        <include refid="Base_Column_List" />
+        from ff_service_pack fsp
+        LEFT JOIN comment_rich_text crt ON  fsp.serve_detailed = crt.id
+        LEFT JOIN ff_nurseify fn ON fsp.serve_nurseify = fn.id
+        LEFT JOIN  comment_picture p
+        on p.id =
+        (SELECT fsps.picture_id from ff_service_pack_picture fsps where fsp.id = fsps.service_pack_id LIMIT 1)
+
+
+    </select>
+
+</mapper>
